@@ -1,0 +1,24 @@
+(function(global){
+'use strict';
+const clamp=x=>Math.min(1,Math.max(0,Number.isFinite(+x)?+x:0));
+function createETMAudio(manifest,options={}){
+ const resolve=options.resolve||((path)=>path), audioFactory=options.audioFactory||(()=>new Audio()), storage=options.storage||null;
+ const music=audioFactory();music.preload='none';let cfg={enabled:false,bgm:.50,sfx:.65},active=false,scene='title',track=null,status='대기',generation=0;const voices=new Set();
+ try{const s=JSON.parse(storage?.getItem('etm.audio.v1')||'null');if(s){cfg.bgm=clamp(s.bgm??.50);cfg.sfx=clamp(s.sfx??.65)}}catch{}
+ function save(){try{storage?.setItem('etm.audio.v1',JSON.stringify({bgm:cfg.bgm,sfx:cfg.sfx}))}catch{}}
+ function notify(){options.onChange?.(snapshot())}
+ function snapshot(){return {...cfg,active,scene,track,status,playing:!music.paused}}
+ function stopVoices(){for(const v of voices){v.pause();}voices.clear()}
+ function stop(){generation++;music.pause();track=null;status='정지';notify()}
+ async function playTrack(id){const a=manifest.bgm[id];if(!a||!active||!cfg.enabled)return false;const token=++generation;if(track!==id){music.pause();music.src=resolve(a.path);music.loop=!!a.loop;track=id;}music.volume=cfg.bgm;status='재생 요청';notify();try{await music.play();if(token!==generation)return false;status='재생 중';notify();return true}catch(e){if(token===generation){status='재생 제한 또는 파일 오류';notify()}return false}}
+ function setScene(v){const previous=manifest.sceneMap[scene]||'title';scene=v;let t=manifest.sceneMap[v]||'title';if(active&&cfg.enabled&&t!==previous&&t!==track)return playTrack(t);notify();return Promise.resolve(false)}
+ function enable(v=true){cfg.enabled=!!v;active=!!v;if(!v){stopVoices();stop();return Promise.resolve(false)}return playTrack(manifest.sceneMap[scene]||'title')}
+ function setVolume(kind,v){if(!['bgm','sfx'].includes(kind))return;cfg[kind]=clamp(v);music.volume=cfg.bgm;for(const a of voices)a.volume=cfg.sfx;save();notify()}
+ async function effect(id){const item=manifest.sfx[id];if(!item||!active||!cfg.enabled||!cfg.sfx)return false;const a=audioFactory();a.src=resolve(item.path);a.volume=cfg.sfx;while(voices.size>=4){let v=voices.values().next().value;v.pause();voices.delete(v)}voices.add(a);const end=()=>voices.delete(a);a.addEventListener('ended',end,{once:true});a.addEventListener('error',end,{once:true});try{await a.play();return true}catch{end();return false}}
+ function event(id){let k=manifest.eventMap[id];if(manifest.bgm[k])return playTrack(k);if(manifest.sfx[k])return effect(k);return Promise.resolve(false)}
+ music.addEventListener('ended',()=>{if(cfg.enabled&&active&&!music.loop){track=null;playTrack(manifest.sceneMap[scene]||'title')}});
+ music.addEventListener('error',()=>{status='오디오 파일 오류';notify()});
+ return {snapshot,enable,setScene,setVolume,playTrack,effect,event,stop};
+}
+global.createETMAudio=createETMAudio;
+})(typeof window!=='undefined'?window:globalThis);

@@ -1,0 +1,79 @@
+{
+  "version": "0.8",
+  "bytes": 7150716,
+  "sha256": "0efe3ac33899a5bf2aec42d80747de6fb4b6bce63aeee7c6cd6a16d6612a8ba1",
+  "parts": [
+    {
+      "path": "game/v0.8/001-00.txt",
+      "gitBlob": "b3e4410ffa4f7bacbd1c1c9ec3e63d8a56296350"
+    },
+    {
+      "path": "game/v0.8/006-00.txt",
+      "gitBlob": "3747732359678592fc053cdcaed3a329e7b9484a"
+    },
+    {
+      "path": "game/v0.8/006-01.txt",
+      "gitBlob": "d977c294c73d32bf230ad53ae5e2dee3ca9f801e"
+    },
+    {
+      "path": "game/v0.8/006-02.txt",
+      "gitBlob": "e7bad12b402b049e7a5d91b9dcf0443885746974"
+    },
+    {
+      "path": "game/v0.8/006-03.txt",
+      "gitBlob": "143749fc9ff82ce0dd278fe6d62778d6b467509b"
+    },
+    {
+      "path": "game/v0.8/006-04.txt",
+      "gitBlob": "663123aea334556dcf7e51aad04e92999214e84e"
+    },
+    {
+      "path": "game/v0.8/006-05.txt",
+      "gitBlob": "bdc3447db59505cff0556c8bf2592eeb0c95ef46"
+    },
+    {
+      "path": "game/v0.8/006-06.txt",
+      "gitBlob": "ffb4439321e7b2289de09ab61bb0eef7ac76bbb2"
+    },
+    {
+      "path": "game/v0.8/006-07.txt",
+      "gitBlob": "7acea82af909b20d8018254366e65eb921c34867"
+    },
+    {
+      "path": "game/v0.8/007-00.txt",
+      "gitBlob": "d28e2b2a01aae72b250d538db9730540bb23c3c8"
+    },
+    {
+      "path": "game/v0.8/031-00.txt",
+      "gitBlob": "f1e69896917dff76d82c75620870b48f5a3e8ec9"
+    },
+    {
+      "path": "game/v0.8/031-01.txt",
+      "gitBlob": "ccbb072b29ed778fee82ce9c2117610d163cfa44"
+    },
+    {
+      "path": "game/v0.8/031-02.txt",
+      "gitBlob": "0f59017a8a61dbbf36dd26d61542c008e30cec44"
+    },
+    {
+      "path": "game/v0.8/031-03.txt",
+      "gitBlob": "c7b0d782b2c183af69ce231dd5f7bd5dae6b15f0"
+    },
+    {
+      "path": "game/v0.8/031-04.txt",
+      "gitBlob": "d6d542cea8e5d0b55ee509ff4523ae7e34c5952e"
+    },
+    {
+      "path": "game/v0.8/031-05.txt",
+      "gitBlob": "166bdb0cb374a611f30acb0de62ac50ba14339b5"
+    },
+    {
+      "path": "game/v0.8/031-06.txt",
+      "gitBlob": "ad889e7b4707e4ec0d8b3dd5c7d56dc9c197a835"
+    },
+    {
+      "path": "game/v0.8/032-00.txt",
+      "gitBlob": "ad4bced2f58adda91e3173f0d7ed25622f7e295c"
+    }
+  ]
+}
