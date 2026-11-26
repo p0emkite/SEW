@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>삼국무쌍 Empires W</title><style>html{color-scheme:dark}body{margin:0;background:#11171a;color:#f2e8d5;font-family:system-ui,sans-serif;min-height:100vh;display:grid;place-items:center}main{max-width:30rem;padding:2rem}h1{color:#d4b67b}progress{width:100%;accent-color:#d4b67b}button{padding:.75rem 1rem;background:#26302f;border:1px solid #d4b67b;color:#f2e8d5;border-radius:5px}</style></head>
-<body><main><h1>삼국무쌍 Empires W</h1><p>SEW v0.8.2 · 게임 데이터 불러오는 중</p><progress id="progress" value="0" max="18"></progress><p id="status" role="status">초기화 중…</p><button id="retry" hidden onclick="location.reload()">다시 시도</button><noscript>게임을 실행하려면 JavaScript를 활성화하세요.</noscript></main>
+<body><main><h1>삼국무쌍 Empires W</h1><p>SEW v0.8.3 · 게임 데이터 불러오는 중</p><progress id="progress" value="0" max="18"></progress><p id="status" role="status">초기화 중…</p><button id="retry" hidden onclick="location.reload()">다시 시도</button><noscript>게임을 실행하려면 JavaScript를 활성화하세요.</noscript></main>
 <script>
 (async function(){
  const manifest={"version":"0.8","bytes":7150716,"sha256":"0efe3ac33899a5bf2aec42d80747de6fb4b6bce63aeee7c6cd6a16d6612a8ba1","parts":[{"path":"game/v0.8/001-00.txt","gitBlob":"b3e4410ffa4f7bacbd1c1c9ec3e63d8a56296350"},{"path":"game/v0.8/006-00.txt","gitBlob":"3747732359678592fc053cdcaed3a329e7b9484a"},{"path":"game/v0.8/006-01.txt","gitBlob":"d977c294c73d32bf230ad53ae5e2dee3ca9f801e"},{"path":"game/v0.8/006-02.txt","gitBlob":"e7bad12b402b049e7a5d91b9dcf0443885746974"},{"path":"game/v0.8/006-03.txt","gitBlob":"143749fc9ff82ce0dd278fe6d62778d6b467509b"},{"path":"game/v0.8/006-04.txt","gitBlob":"663123aea334556dcf7e51aad04e92999214e84e"},{"path":"game/v0.8/006-05.txt","gitBlob":"bdc3447db59505cff0556c8bf2592eeb0c95ef46"},{"path":"game/v0.8/006-06.txt","gitBlob":"ffb4439321e7b2289de09ab61bb0eef7ac76bbb2"},{"path":"game/v0.8/006-07.txt","gitBlob":"7acea82af909b20d8018254366e65eb921c34867"},{"path":"game/v0.8/007-00.txt","gitBlob":"d28e2b2a01aae72b250d538db9730540bb23c3c8"},{"path":"game/v0.8/031-00.txt","gitBlob":"f1e69896917dff76d82c75620870b48f5a3e8ec9"},{"path":"game/v0.8/031-01.txt","gitBlob":"ccbb072b29ed778fee82ce9c2117610d163cfa44"},{"path":"game/v0.8/031-02.txt","gitBlob":"0f59017a8a61dbbf36dd26d61542c008e30cec44"},{"path":"game/v0.8/031-03.txt","gitBlob":"c7b0d782b2c183af69ce231dd5f7bd5dae6b15f0"},{"path":"game/v0.8/031-04.txt","gitBlob":"d6d542cea8e5d0b55ee509ff4523ae7e34c5952e"},{"path":"game/v0.8/031-05.txt","gitBlob":"166bdb0cb374a611f30acb0de62ac50ba14339b5"},{"path":"game/v0.8/031-06.txt","gitBlob":"ad889e7b4707e4ec0d8b3dd5c7d56dc9c197a835"},{"path":"game/v0.8/032-00.txt","gitBlob":"ad4bced2f58adda91e3173f0d7ed25622f7e295c"}]};
@@ -156,6 +156,37 @@
  // Replace flat scene art for council and stroll with high-resolution backgrounds. Palace is already bundled.
  rep("bg=id=>sewBackground(id)||asset(backgrounds.assets.find(a=>a.id===id)?.path)","bg=id=>id==='warroom'?asset(backgrounds.assets.find(a=>a.id==='palace')?.path):id==='town'?'https://upload.wikimedia.org/wikipedia/commons/3/3d/Hengdian_World_Studios_001.jpg':sewBackground(id)||asset(backgrounds.assets.find(a=>a.id===id)?.path)");
  rep('<section class="scene" style="background-image:linear-gradient(0deg,#101a1df5,#11181d35 85%),url(\'${bg(id)}\')">','<section class="scene sew-scene-${esc(id)}" style="background-image:linear-gradient(0deg,#101a1de8,#11181d22 85%),url(\'${bg(id)}\')${id===\'town\'?",url(\'"+asset(backgrounds.assets.find(a=>a.id===\'palace\')?.path)+"\')":\'\'}">');
+ return html;
+})(html);
+  html=(function portraitLayoutFix(html){
+ const rep=(a,b)=>{if(!html.includes(a))throw Error("layout anchor missing: "+a);html=html.replace(a,()=>b);};
+ const style=`<style id="sew-portrait-layout-v083">
+ /* Portrait and metadata share the same row, not a cinematic landscape crop. */
+ .officer-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-items:start}
+ .officer-grid>.panel,.officer-grid #off-detail{align-content:start;grid-auto-rows:max-content;min-width:0}
+ .officer-grid .searchbar{align-items:center;grid-template-columns:minmax(0,1fr) 120px;margin-bottom:0}
+ .officer-grid .searchbar input,.officer-grid .searchbar select{height:42px;min-height:42px;max-height:42px;width:100%;min-width:0;padding:9px 12px}
+ .officer-grid .off-list{height:clamp(290px,60vh,590px);margin-top:8px;scrollbar-gutter:stable}
+ .sew-officer-head{display:grid!important;grid-template-columns:minmax(120px,43%) minmax(0,1fr)!important;align-items:start!important;gap:16px!important;min-width:0}
+ .sew-officer-head>.stack{align-content:start;gap:9px;min-width:0;padding-top:6px}
+ .sew-officer-head h2{font-size:clamp(20px,2vw,29px);overflow-wrap:anywhere;line-height:1.2}
+ .sew-officer-head .sew-portrait-frame.detail-portrait{width:100%!important;aspect-ratio:3/4!important;height:auto!important;min-height:0!important;max-height:none!important;max-width:100%!important;align-self:start}
+ .sew-portrait-frame.detail-portrait{width:clamp(110px,15vw,185px)!important;aspect-ratio:3/4!important;min-height:0!important;max-height:none!important;flex:none}
+ .sew-portrait-frame>img,.sew-portrait-frame[data-mode="upper"]>img,.sew-portrait-frame[data-mode="whole"]>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important}
+ .sew-portrait-frame{background:#292e2f}
+ .person{grid-template-columns:56px minmax(60px,1fr) 58px 70px!important;min-height:72px}
+ .person .sew-portrait-frame{width:54px;height:62px;aspect-ratio:3/4}
+ .sew-stroll-list .sew-portrait-frame{width:62px;height:76px}
+ .sew-dialogue .sew-portrait-frame{width:clamp(112px,20vw,170px);aspect-ratio:3/4;height:auto}
+ .player-mini .sew-portrait-frame{width:48px;height:58px}
+ .dialog .sew-officer-head{grid-template-columns:minmax(110px,37%) minmax(0,1fr)!important}
+ .officer-grid .form-end{margin-top:2px}
+ @media(max-width:700px){.officer-grid{grid-template-columns:1fr}.officer-grid .searchbar{grid-template-columns:minmax(0,1fr) 95px}.officer-grid .off-list{height:300px}.person{grid-template-columns:48px minmax(48px,1fr) 40px 45px!important;min-height:60px}.person .sew-portrait-frame{width:46px;height:54px}.sew-officer-head{grid-template-columns:minmax(100px,39%) minmax(0,1fr)!important;gap:12px!important}}
+ </style>`;
+ rep("</head>",style+"</head>");
+ rep("const all=special?[local,jp(p?.fullbodySourceCandidate),p?.fullbodySourceCandidate,jp(p?.portraitSource),p?.portraitSource,jp(p?.casualSourceCandidate),p?.casualSourceCandidate,fallback]:[portrait(id),fallback];","const compact=!cls;const roster=[jp(p?.portraitSource),p?.portraitSource],full=[jp(p?.fullbodySourceCandidate),p?.fullbodySourceCandidate];const all=special?[local,...(compact?[...roster,...full]:[...full,...roster]),jp(p?.casualSourceCandidate),p?.casualSourceCandidate,fallback]:[portrait(id),fallback];");
+ rep("공식 전신 원본에서 상반신 중심으로 표시 · 이미지 실패 시 다른 공식 경로 사용.","공식 초상 · 원본 비율 유지 · 이미지 실패 시 대체 경로 사용.");
+ html=html.replaceAll("v0.8.2","v0.8.3").replaceAll("STEP 05-G++","STEP 05-G++ / UI");
  return html;
 })(html);
   document.open();document.write(html);document.close();
